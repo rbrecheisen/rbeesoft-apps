@@ -76,7 +76,10 @@ class Settings:
     def print(self):
         self.check_bundle_identifier_and_app_name()
         if self._settings:
-            print(json.dumps(self._settings, indent=2, sort_keys=True))
+            text = json.dumps(self._settings, indent=2, sort_keys=True)
+            print(text)
+            return text
+        return None
 
     def close_file(self):
         self.check_bundle_identifier_and_app_name()

@@ -21,6 +21,9 @@ class MainWindow(QMainWindow):
 
     def settings(self):
         return self._settings
+    
+    def log_manager(self):
+        return self._log_manager
 
     def log_dockwidget(self):
         if not self._log_dockwidget:

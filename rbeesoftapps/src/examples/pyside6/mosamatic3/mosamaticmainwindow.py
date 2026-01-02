@@ -7,4 +7,4 @@ class MosamaticMainWindow(MainWindow):
             bundle_identifier='nl.rbeesoft',
             app_name='mosamatic3'
         )
-        self.settings().print()
+        self.log_manager().info(f'Settings: {self.settings().print()}')
