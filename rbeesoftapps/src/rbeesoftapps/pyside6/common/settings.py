@@ -73,6 +73,11 @@ class Settings:
         name = self.prepend_bundle_identifier_and_name(name)
         self._settings[self._bundle_identifier][self._app_name][name] = value
 
+    def print(self):
+        self.check_bundle_identifier_and_app_name()
+        if self._settings:
+            print(json.dumps(self._settings, indent=2, sort_keys=True))
+
     def close_file(self):
         self.check_bundle_identifier_and_app_name()
         if self._settings:
