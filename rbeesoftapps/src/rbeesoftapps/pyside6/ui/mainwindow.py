@@ -1,3 +1,6 @@
+from PySide6.QtCore import (
+    Qt,
+)
 from PySide6.QtWidgets import (
     QMainWindow,
 )
@@ -14,6 +17,7 @@ class MainWindow(QMainWindow):
         self._settings = Settings(self._bundle_identifier, self._app_name)
         self._log_manager = LogManager(self._app_name)
         self._log_dockwidget = None
+        self.init_layout()
 
     def settings(self):
         return self._settings
@@ -23,3 +27,6 @@ class MainWindow(QMainWindow):
             self._log_dockwidget = LogDockWidget()
             self._log_manager.add_listener(self._log_dockwidget)
         return self._log_dockwidget
+    
+    def init_layout(self):
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.log_dockwidget())

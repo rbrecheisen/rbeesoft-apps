@@ -10,7 +10,7 @@ from rbeesoftapps.pyside6.ui.components.dockwidgets.dockwidget import DockWidget
 
 
 class LogDockWidget(DockWidget, LogManagerListener):
-    def __init__(self, title: str):
+    def __init__(self, title: str='Output log'):
         super(LogDockWidget, self).__init__(title)
         self._title_label = None
         self._text_edit = None
