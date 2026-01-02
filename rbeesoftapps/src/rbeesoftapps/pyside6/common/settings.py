@@ -10,33 +10,31 @@ class Settings:
     def __init__(self, bundle_identifier: str=None, app_name: str=None) -> None:
         self._bundle_identifier = bundle_identifier
         self._app_name = app_name
-        self._file_path = os.path.join(Path.home(), f'.{self._app_name}.settings')
+        self._file_path = os.path.join(Path.home(), f'{self._app_name}.settings')
         self._settings = self.load_or_initialize_settings(self._file_path)
         atexit.register(self.close_file)
 
     def load_or_initialize_settings(self, file_path):
-        with open(file_path, 'r') as f:
-            try:
-                return json.load(f)
-            except json.decoder.JSONDecodeError:
-                return {
-                    self._bundle_identifier: {
-                        self._app_name: {
-                        }
-                    }
+        file_exists = os.path.isfile(file_path)
+        if file_exists:
+            with open(file_path, 'r') as f:
+                try:
+                    return json.load(f)
+                except json.decoder.JSONDecodeError:
+                    pass
+        return {
+            self._bundle_identifier: {
+                self._app_name: {
                 }
+            }
+        }        
 
     def check_bundle_identifier_and_app_name(self):
         if not self._bundle_identifier or not self._app_name:
             raise ValueError(f'Settings bundle identifier or app name not set')
         
-    def prepend_bundle_identifier_and_name(self, name):
-        self.check_bundle_identifier_and_app_name()
-        return '{}.{}.{}'.format(self._bundle_identifier, self._app_name, name)
-
     def get(self, name, default=None):
-        if not name.startswith(self._bundle_identifier):
-            name = self.prepend_bundle_identifier_and_name(name)
+        self.check_bundle_identifier_and_app_name()
         if not name in self._settings[self._bundle_identifier][self._app_name].keys():
             return default
         return self._settings[self._bundle_identifier][self._app_name][name]
@@ -70,7 +68,6 @@ class Settings:
     
     def set(self, name, value):
         self.check_bundle_identifier_and_app_name()
-        name = self.prepend_bundle_identifier_and_name(name)
         self._settings[self._bundle_identifier][self._app_name][name] = value
 
     def print(self):
