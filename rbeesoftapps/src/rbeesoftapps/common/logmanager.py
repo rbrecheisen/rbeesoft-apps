@@ -8,7 +8,7 @@ from rbeesoftapps.common.singleton import singleton
 
 @singleton
 class LogManager:
-    def __init__(self, app_name: str, suppress_print: bool=False) -> None:
+    def __init__(self, app_name: str=None, suppress_print: bool=False) -> None:
         self._suppress_print = suppress_print
         self._listeners = []
         file_path = os.path.join(Path.home(), f'{app_name}.log')
