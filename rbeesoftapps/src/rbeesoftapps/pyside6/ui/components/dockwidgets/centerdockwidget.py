@@ -11,3 +11,4 @@ class CenterDockWidget(DockWidget):
 
     def init_layout(self):
         self.setWidget(QWidget())
+        self.setObjectName(self.__class__.__name__.lower())

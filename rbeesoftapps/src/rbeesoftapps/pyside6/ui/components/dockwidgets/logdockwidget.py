@@ -39,6 +39,7 @@ class LogDockWidget(DockWidget, LogManagerListener):
         layout.addWidget(self.clear_logs_button())
         container = QWidget()
         container.setLayout(layout)
+        self.setObjectName(self.__class__.__name__.lower())
         self.setWindowTitle(self.title_label().text())
         self.setWidget(container)
 

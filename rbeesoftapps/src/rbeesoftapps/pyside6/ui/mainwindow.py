@@ -1,5 +1,6 @@
 from PySide6.QtCore import (
     Qt,
+    QByteArray,
 )
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -8,7 +9,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import (
     QGuiApplication,
 )
-from rbeesoftapps.pyside6.common.settings import Settings
+from rbeesoftapps.pyside6.ui.settings import Settings
 from rbeesoftapps.common.logmanager import LogManager
 from rbeesoftapps.pyside6.ui.components.dockwidgets.centerdockwidget import CenterDockWidget
 from rbeesoftapps.pyside6.ui.components.dockwidgets.logdockwidget import LogDockWidget
@@ -47,23 +48,24 @@ class MainWindow(QMainWindow):
     def init_layout(self):
         self.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.center_dockwidget())
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.log_dockwidget())
-        self.load_geometry_and_state()
+        if not self.load_geometry_and_state():
+            self.set_default_size_and_position()
 
     def load_geometry_and_state(self):
-        settings = self.settings()
-        width = settings.get_int('mainwindow.width', 1024)
-        height = settings.get_int('mainwindow.height', 768)
-        if width and width > 0 and height and height > 0:
-            self.set_default_size(width, height)
-        else:
-            self.set_default_size(1024, 768)
+        geometry = self.settings().get('mainwindow/geometry')
+        state = self.settings().get('mainwindow/state')
+        if isinstance(geometry, QByteArray) and self.restoreGeometry(geometry):
+            if isinstance(state, QByteArray):
+                self.restoreState(state)
+            return True
+        return False
 
     def save_geometry_and_state(self):
-        self.settings().set('mainwindow.width', self.size().width())
-        self.settings().set('mainwindow.height', self.size().height())
+        self.settings().set('mainwindow/geometry', self.saveGeometry())
+        self.settings().set('mainwindow/state', self.saveState())
 
-    def set_default_size(self, width, height):
-        self.resize(width, height)
+    def set_default_size_and_position(self):
+        self.resize(1024, 768)
         self.center_window()
 
     def center_window(self):
