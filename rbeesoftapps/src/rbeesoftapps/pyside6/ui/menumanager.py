@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (
     QMenuBar,
     QMenu,
-    QAction,
 )
+from PySide6.QtGui import QAction
 
 
 class MenuManager:
