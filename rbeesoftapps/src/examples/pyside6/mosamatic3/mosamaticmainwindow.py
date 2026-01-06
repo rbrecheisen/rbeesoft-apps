@@ -7,4 +7,10 @@ class MosamaticMainWindow(MainWindow):
             bundle_identifier='nl.rbeesoft',
             app_name='mosamatic3'
         )
-        self.log_manager().info(f'Settings: {self.settings().print()}')
+        self.log().info(self.settings().to_string())
+        self.add_page(
+            None,
+            '/data/dicom/anonymizer',
+            'DICOM Anonyizer',
+            'Data/Dicom',
+        )
