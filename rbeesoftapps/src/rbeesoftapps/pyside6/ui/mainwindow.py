@@ -18,10 +18,12 @@ from rbeesoftapps.pyside6.ui.menumanager import MenuManager
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, bundle_identifier: str, app_name: str) -> None:
+    def __init__(self, bundle_identifier: str, app_name: str, width: int, height: int) -> None:
         super(MainWindow, self).__init__()
         self._bundle_identifier = bundle_identifier
         self._app_name = app_name
+        self._width = width
+        self._height = height
         self._settings = Settings(self._bundle_identifier, self._app_name)
         self._log_manager = LogManager(self._app_name)
         self._menu_manager = MenuManager(self.menuBar())
@@ -54,6 +56,8 @@ class MainWindow(QMainWindow):
     def init_layout(self):
         self.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.center_dockwidget())
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.log_dockwidget())
+        if not self.load_geometry_and_state():
+            self.set_default_size_and_position()
 
     def add_page(self, page: Page, page_id: str, page_title: str, menu_path: str) -> None:
         if page_id in self._pages.keys():
@@ -86,7 +90,7 @@ class MainWindow(QMainWindow):
         self.settings().set('mainwindow/state', self.saveState())
 
     def set_default_size_and_position(self):
-        self.resize(1024, 768)
+        self.resize(self._width, self._height)
         self.center_window()
 
     def center_window(self):

@@ -6,6 +6,8 @@ class MosamaticMainWindow(MainWindow):
         super(MosamaticMainWindow, self).__init__(
             bundle_identifier='nl.rbeesoft',
             app_name='mosamatic3',
+            width=1024,
+            height=768,
         )
         self.log().info(self.settings().to_string())
         self.add_page(

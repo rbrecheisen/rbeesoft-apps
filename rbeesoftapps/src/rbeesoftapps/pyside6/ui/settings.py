@@ -10,6 +10,7 @@ class Settings(QSettings):
             app_name,
         )
         self._bundle_identifier = bundle_identifier
+        self._app_name = app_name
 
     def prepend_bundle_identifier_and_name(self, name):
         return '{}.{}.{}'.format(self._bundle_identifier, self._app_name, name)
