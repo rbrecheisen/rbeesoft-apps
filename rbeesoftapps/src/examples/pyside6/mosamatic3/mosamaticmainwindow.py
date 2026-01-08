@@ -18,3 +18,4 @@ class MosamaticMainWindow(MainWindow):
                 menu_path='Data/Dicom',
             ),
         )
+        MainWindow.help()

@@ -19,8 +19,21 @@ from rbeesoftapps.pyside6.ui.pages.page import Page
 from rbeesoftapps.pyside6.ui.pages.pagelayout import PageLayout
 from rbeesoftapps.pyside6.ui.menumanager import MenuManager
 
+HELP = """
+def __init__(self, bundle_identifier: str, app_name: str, width: int, height: int) -> None:
+def settings(self) -> Settings:
+def log(self) -> LogManager:
+def add_page(self, page: Page) -> None:
+def page(self, page_id: str, key='page') -> Page:
+def navigate_to_page(self, page_id) -> None:
+"""
+
 
 class MainWindow(QMainWindow):
+    @staticmethod
+    def help():
+        print(HELP)
+
     def __init__(self, bundle_identifier: str, app_name: str, width: int, height: int) -> None:
         super(MainWindow, self).__init__()
         self._bundle_identifier = bundle_identifier
@@ -37,23 +50,23 @@ class MainWindow(QMainWindow):
 
     # GETTERS
 
-    def settings(self):
+    def settings(self) -> Settings:
         return self._settings
     
-    def log(self):
+    def log(self) -> LogManager:
         return self._log_manager
     
-    def page_layout(self):
+    def page_layout(self) -> PageLayout:
         if not self._page_layout:
             self._page_layout = PageLayout()
         return self._page_layout
     
-    def center_dockwidget(self):
+    def center_dockwidget(self) -> CenterDockWidget:
         if not self._center_dockwidget:
             self._center_dockwidget = CenterDockWidget()
         return self._center_dockwidget
 
-    def log_dockwidget(self):
+    def log_dockwidget(self) -> LogDockWidget:
         if not self._log_dockwidget:
             self._log_dockwidget = LogDockWidget()
             self._log_dockwidget.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
@@ -63,12 +76,12 @@ class MainWindow(QMainWindow):
     
     # LAYOUT
 
-    def init_menus(self):
+    def init_menus(self) -> None:
         menu = self.menuBar().addMenu('Application')
         menu_action = menu.addAction('Exit')
         menu_action.triggered.connect(self.close)
     
-    def init_layout(self):
+    def init_layout(self) -> None:
         self.init_menus()
         self.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.center_dockwidget())
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.log_dockwidget())
@@ -96,7 +109,7 @@ class MainWindow(QMainWindow):
 
     # LOAD/SAVE GEOMETRY AND STATE
 
-    def load_geometry_and_state(self):
+    def load_geometry_and_state(self) -> bool:
         geometry = self.settings().get('mainwindow/geometry')
         state = self.settings().get('mainwindow/state')
         if isinstance(geometry, QByteArray) and self.restoreGeometry(geometry):
@@ -105,18 +118,18 @@ class MainWindow(QMainWindow):
             return True
         return False
 
-    def save_geometry_and_state(self):
+    def save_geometry_and_state(self) -> None:
         self.settings().set('mainwindow/geometry', self.saveGeometry())
         self.settings().set('mainwindow/state', self.saveState())
         # TODO: Save page layout as well
 
     # POSITIONING AND SIZE
 
-    def set_default_size_and_position(self):
+    def set_default_size_and_position(self) -> None:
         self.resize(self._width, self._height)
         self.center_window()
 
-    def center_window(self):
+    def center_window(self) -> None:
         screen = QGuiApplication.primaryScreen().geometry()
         x = (screen.width() - self.geometry().width()) / 2
         y = (screen.height() - self.geometry().height()) / 2
@@ -124,6 +137,6 @@ class MainWindow(QMainWindow):
 
     # CLOSING
 
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         self.save_geometry_and_state()
-        return super().closeEvent(event)
+        super().closeEvent(event)
