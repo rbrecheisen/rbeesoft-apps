@@ -11,8 +11,8 @@ class MosamaticMainWindow(MainWindow):
         )
         self.log().info(self.settings().to_string())
         self.add_page(
-            None,
-            '/data/dicom/anonymizer',
-            'DICOM Anonyizer',
-            'Data/Dicom',
+            page=None,
+            page_id='/data/dicom/anonymizer',
+            page_title='DICOM Anonymizer',
+            menu_path='Data/Dicom',
         )

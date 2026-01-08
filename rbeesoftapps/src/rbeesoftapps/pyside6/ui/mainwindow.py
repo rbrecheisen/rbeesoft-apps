@@ -1,3 +1,4 @@
+from functools import partial
 from PySide6.QtCore import (
     Qt,
     QByteArray,
@@ -32,12 +33,12 @@ class MainWindow(QMainWindow):
         self._center_dockwidget = None
         self.init_layout()
 
+    # GETTERS
+
     def settings(self):
-        """ Returns settings object for this main window """
         return self._settings
     
     def log(self):
-        """ Returns log manager object for this main window """
         return self._log_manager
     
     def center_dockwidget(self):
@@ -53,11 +54,21 @@ class MainWindow(QMainWindow):
             self._log_manager.add_listener(self._log_dockwidget)
         return self._log_dockwidget
     
+    # LAYOUT
+
+    def init_menus(self):
+        menu = self.menuBar().addMenu('Application')
+        menu_action = menu.addAction('Exit')
+        menu_action.triggered.connect(self.close)
+    
     def init_layout(self):
+        self.init_menus()
         self.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.center_dockwidget())
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.log_dockwidget())
         if not self.load_geometry_and_state():
             self.set_default_size_and_position()
+
+    # PAGES
 
     def add_page(self, page: Page, page_id: str, page_title: str, menu_path: str) -> None:
         if page_id in self._pages.keys():
@@ -67,7 +78,9 @@ class MainWindow(QMainWindow):
             'menu_path': menu_path,
             'page': page,
         }
-        self._menu_manager.create_menu(menu_path)
+        menu = self._menu_manager.create_menu(menu_path)
+        menu_action = menu.addAction(page_title)
+        menu_action.triggered.connect(partial(self.navigate_to_page, page_id))
 
     def page(self, page_id: str, key='page') -> Page:
         if not page_id in self._pages.keys():
@@ -75,6 +88,11 @@ class MainWindow(QMainWindow):
         if not key in self._pages[page_id]:
             raise Exception(f'Key {key} does not exist in dictionary for {page_id}')
         return self._pages[page_id][key]
+    
+    def navigate_to_page(self, page_id) -> None:
+        print(f'Navigating to page {page_id}')
+
+    # LOAD/SAVE GEOMETRY AND STATE
 
     def load_geometry_and_state(self):
         geometry = self.settings().get('mainwindow/geometry')
@@ -89,6 +107,8 @@ class MainWindow(QMainWindow):
         self.settings().set('mainwindow/geometry', self.saveGeometry())
         self.settings().set('mainwindow/state', self.saveState())
 
+    # POSITIONING AND SIZE
+
     def set_default_size_and_position(self):
         self.resize(self._width, self._height)
         self.center_window()
@@ -98,6 +118,8 @@ class MainWindow(QMainWindow):
         x = (screen.width() - self.geometry().width()) / 2
         y = (screen.height() - self.geometry().height()) / 2
         self.move(int(x), int(y))
+
+    # CLOSING
 
     def closeEvent(self, event):
         self.save_geometry_and_state()
