@@ -1,4 +1,5 @@
 from rbeesoftapps.pyside6.ui.mainwindow import MainWindow
+from rbeesoftapps.pyside6.ui.pages.page import Page
 
 
 class MosamaticMainWindow(MainWindow):
@@ -11,8 +12,9 @@ class MosamaticMainWindow(MainWindow):
         )
         self.log().info(self.settings().to_string())
         self.add_page(
-            page=None,
-            page_id='/data/dicom/anonymizer',
-            page_title='DICOM Anonymizer',
-            menu_path='Data/Dicom',
+            page=Page(
+                page_id='/data/dicom/anonymizer',
+                page_title='DICOM Anonymizer',
+                menu_path='Data/Dicom',
+            ),
         )

@@ -6,6 +6,7 @@ from PySide6.QtCore import (
 from PySide6.QtWidgets import (
     QMainWindow,
     QSizePolicy,
+    QStackedWidget,
 )
 from PySide6.QtGui import (
     QGuiApplication,
@@ -15,6 +16,7 @@ from rbeesoftapps.pyside6.ui.components.dockwidgets.centerdockwidget import Cent
 from rbeesoftapps.pyside6.ui.components.dockwidgets.logdockwidget import LogDockWidget
 from rbeesoftapps.pyside6.ui.settings import Settings
 from rbeesoftapps.pyside6.ui.pages.page import Page
+from rbeesoftapps.pyside6.ui.pages.pagelayout import PageLayout
 from rbeesoftapps.pyside6.ui.menumanager import MenuManager
 
 
@@ -29,7 +31,7 @@ class MainWindow(QMainWindow):
         self._log_manager = LogManager(self._app_name)
         self._menu_manager = MenuManager(self.menuBar())
         self._log_dockwidget = None
-        self._pages = {}
+        self._page_layout = None
         self._center_dockwidget = None
         self.init_layout()
 
@@ -40,6 +42,11 @@ class MainWindow(QMainWindow):
     
     def log(self):
         return self._log_manager
+    
+    def page_layout(self):
+        if not self._page_layout:
+            self._page_layout = PageLayout()
+        return self._page_layout
     
     def center_dockwidget(self):
         if not self._center_dockwidget:
@@ -70,17 +77,12 @@ class MainWindow(QMainWindow):
 
     # PAGES
 
-    def add_page(self, page: Page, page_id: str, page_title: str, menu_path: str) -> None:
-        if page_id in self._pages.keys():
-            raise Exception(f'Page with ID {page_id} already added to main window')
-        self._pages[page_id] = {
-            'page_title': page_title,
-            'menu_path': menu_path,
-            'page': page,
-        }
-        menu = self._menu_manager.create_menu(menu_path)
-        menu_action = menu.addAction(page_title)
-        menu_action.triggered.connect(partial(self.navigate_to_page, page_id))
+    def add_page(self, page: Page) -> None:
+        self.page_layout().add_page(page)
+        # Create menu for page
+        menu = self._menu_manager.create_menu(page.menu_path())
+        menu_action = menu.addAction(page.page_title())
+        menu_action.triggered.connect(partial(self.navigate_to_page, page.page_id()))
 
     def page(self, page_id: str, key='page') -> Page:
         if not page_id in self._pages.keys():
@@ -90,7 +92,7 @@ class MainWindow(QMainWindow):
         return self._pages[page_id][key]
     
     def navigate_to_page(self, page_id) -> None:
-        print(f'Navigating to page {page_id}')
+        self.page_layout().select_page(page_id)
 
     # LOAD/SAVE GEOMETRY AND STATE
 
@@ -106,6 +108,7 @@ class MainWindow(QMainWindow):
     def save_geometry_and_state(self):
         self.settings().set('mainwindow/geometry', self.saveGeometry())
         self.settings().set('mainwindow/state', self.saveState())
+        # TODO: Save page layout as well
 
     # POSITIONING AND SIZE
 
