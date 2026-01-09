@@ -21,4 +21,4 @@ class MosamaticMainWindow(MainWindow):
                 page_title='DICOM Anonymizer',
                 menu_path='Data/Dicom',
             ),
-        )        
+        )
