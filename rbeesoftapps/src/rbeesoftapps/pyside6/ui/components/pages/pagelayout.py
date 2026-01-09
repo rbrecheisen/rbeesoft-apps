@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (
     QStackedWidget,
 )
-from rbeesoftapps.pyside6.ui.pages.page import Page
+from rbeesoftapps.pyside6.ui.components.pages.page import Page
 
 
 class PageLayout(QStackedWidget):

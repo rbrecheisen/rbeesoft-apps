@@ -9,7 +9,7 @@ class MenuManager:
     def __init__(self, menu_bar: QMenuBar) -> None:
         self._menu_bar = menu_bar
 
-    def find_menu(self, title: str, parent_menu: QMenu=None) -> QMenu|None:
+    def _find_menu(self, title: str, parent_menu: QMenu=None) -> QMenu|None:
         if parent_menu is None:
             for action in self._menu_bar.actions():
                 action_menu = action.menu()
@@ -27,11 +27,11 @@ class MenuManager:
         parts = [p.strip() for p in menu_path.split(sep) if p.strip()]
         if not parts:
             raise ValueError('Empty menu path')
-        menu = self.find_menu(title=parts[0])
+        menu = self._find_menu(title=parts[0])
         if menu is None:
             menu = self._menu_bar.addMenu(parts[0])
         for title in parts[1:]:
-            child_menu = self.find_menu(title=title, parent_menu=menu)
+            child_menu = self._find_menu(title=title, parent_menu=menu)
             if child_menu is None:
                 child_menu = menu.addMenu(title)
             menu = child_menu

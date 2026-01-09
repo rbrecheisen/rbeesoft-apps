@@ -12,12 +12,12 @@ class Settings(QSettings):
         self._bundle_identifier = bundle_identifier
         self._app_name = app_name
 
-    def prepend_bundle_identifier_and_name(self, name):
+    def _prepend_bundle_identifier_and_name(self, name):
         return '{}.{}.{}'.format(self._bundle_identifier, self._app_name, name)
 
     def get(self, name, default=None):
         if not name.startswith(self._bundle_identifier):
-            name = self.prepend_bundle_identifier_and_name(name)
+            name = self._prepend_bundle_identifier_and_name(name)
         value = self.value(name)
         if value is None or value == '':
             return default
@@ -51,7 +51,7 @@ class Settings(QSettings):
             return default
     
     def set(self, name, value):
-        name = self.prepend_bundle_identifier_and_name(name)
+        name = self._prepend_bundle_identifier_and_name(name)
         self.setValue(name, value)
 
     def to_string(self):
