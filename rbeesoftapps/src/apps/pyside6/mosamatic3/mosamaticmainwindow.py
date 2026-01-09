@@ -1,4 +1,4 @@
-import apps.pyside6.mosamatic3.resources.mosamatic3
+import apps.pyside6.mosamatic3.resources.mosamatic3_rc
 from PySide6.QtGui import QIcon
 from rbeesoftapps.pyside6.ui.mainwindow import MainWindow
 from rbeesoftapps.pyside6.ui.components.pages.page import Page
