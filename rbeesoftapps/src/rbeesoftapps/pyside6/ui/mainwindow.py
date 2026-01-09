@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import (
     QGuiApplication,
-    QAction,
+    QIcon,
 )
 from rbeesoftapps.common.logmanager import LogManager
 from rbeesoftapps.pyside6.ui.components.dockwidgets.centerdockwidget import CenterDockWidget
@@ -21,22 +21,41 @@ from rbeesoftapps.pyside6.ui.menumanager import MenuManager
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, bundle_identifier: str, app_name: str, title: str, width: int, height: int) -> None:
+    def __init__(self, bundle_identifier: str, app_name: str, title: str, width: int, height: int, app_icon: QIcon=None) -> None:
         super(MainWindow, self).__init__()
         self._bundle_identifier = bundle_identifier
         self._app_name = app_name
         self._title = title
         self._width = width
         self._height = height
+        self._app_icon = app_icon
         self._settings = None
         self._log_manager = None
-        self._menu_manager = MenuManager(self.menuBar())
+        self._menu_manager = None
         self._log_dockwidget = None
         self._page_layout = None
         self._center_dockwidget = None
         self.init_layout()
 
     # GETTERS
+
+    def bundle_identifier(self):
+        return self._bundle_identifier
+    
+    def app_name(self):
+        return self._app_name
+    
+    def title(self):
+        return self._title
+    
+    def width(self):
+        return self._width
+    
+    def height(self):
+        return self._height
+    
+    def app_icon(self):
+        return self._app_icon
 
     def settings(self) -> Settings:
         if not self._settings:
@@ -81,6 +100,8 @@ class MainWindow(QMainWindow):
     
     def init_layout(self) -> None:
         self.setWindowTitle(self._title)
+        if self.app_icon():
+            self.setWindowIcon(self.app_icon())
         self.init_app_menu()
         self.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.center_dockwidget())
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.log_dockwidget())
