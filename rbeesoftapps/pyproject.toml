@@ -9,6 +9,7 @@ readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "pyside6-essentials>=6.9",
+    "sqlalchemy>=2.0.45",
 ]
 
 [tool.poetry]
