@@ -1,5 +1,5 @@
 from rbeesoftapps.pyside6.ui.mainwindow import MainWindow
-from rbeesoftapps.pyside6.ui.pages.page import Page
+from rbeesoftapps.pyside6.ui.components.pages.page import Page
 
 
 class MosamaticMainWindow(MainWindow):
@@ -7,6 +7,7 @@ class MosamaticMainWindow(MainWindow):
         super(MosamaticMainWindow, self).__init__(
             bundle_identifier='nl.rbeesoft',
             app_name='mosamatic3',
+            title='Mosamatic 3',
             width=1024,
             height=768,
         )
@@ -18,4 +19,3 @@ class MosamaticMainWindow(MainWindow):
                 menu_path='Data/Dicom',
             ),
         )
-        MainWindow.help()

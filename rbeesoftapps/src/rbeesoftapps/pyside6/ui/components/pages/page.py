@@ -13,8 +13,8 @@ class Page(QWidget):
         self._page_title = page_title
         self._menu_path = menu_path
         self._splitter = QSplitter(Qt.Horizontal, self)
-        self._splitter.addWidget(QWidget())
-        self._splitter.addWidget(QWidget())
+        self._splitter.addWidget(self.property_widget())
+        self._splitter.addWidget(self.main_widget())
         self._splitter.setStretchFactor(0, 0)
         self._splitter.setStretchFactor(1, 1)
         layout = QHBoxLayout()
@@ -30,3 +30,13 @@ class Page(QWidget):
     
     def menu_path(self):
         return self._menu_path
+    
+    def property_widget(self):
+        x = QWidget()
+        x.setStyleSheet('background: red')
+        return x
+    
+    def main_widget(self):
+        x = QWidget()
+        x.setStyleSheet('background: blue')
+        return x

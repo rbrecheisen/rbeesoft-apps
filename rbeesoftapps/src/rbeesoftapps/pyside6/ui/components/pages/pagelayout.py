@@ -15,6 +15,11 @@ class PageLayout(QStackedWidget):
         self._pages[page.page_id()] = page
         self.addWidget(page)
 
+    def page(self, page_id: str) -> Page:
+        if not page_id in self._pages.keys():
+            raise ValueError(f'Page {page_id} unknown')
+        return self._pages[page_id]
+
     def select_page(self, page_id: str) -> None:
         if not page_id in self._pages.keys():
             raise ValueError(f'Page {page_id} unknown')
