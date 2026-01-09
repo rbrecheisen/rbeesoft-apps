@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
     
     def center_dockwidget(self) -> CenterDockWidget:
         if not self._center_dockwidget:
-            self._center_dockwidget = CenterDockWidget()
+            self._center_dockwidget = CenterDockWidget(self.page_layout())
         return self._center_dockwidget
 
     def log_dockwidget(self) -> LogDockWidget:
@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
     # LAYOUT
 
     def init_app_menu(self) -> None:
+        # This menu only shows up in the Windows version
         menu = self.menu_manager().create_menu('Application')
         menu_action = menu.addAction('Exit')
         menu_action.triggered.connect(self.close)
