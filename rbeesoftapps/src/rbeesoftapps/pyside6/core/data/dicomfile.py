@@ -11,13 +11,13 @@ class DicomFile(File):
 
     def load(self) -> bool:
         self._data = None
-        if os.path.isfile(self.path()):
-            try:
-                self._data = pydicom.dcmread(self.path())
-                return True
-            except pydicom.errors.InvalidDicomError:
-                pass
-        return False
+        if not os.path.isfile(self.path()):
+            return False
+        try:
+            self._data = pydicom.dcmread(self.path())
+            return True
+        except pydicom.errors.InvalidDicomError:
+            return False
         
     def data(self) -> pydicom.FileDataset:
         return self._data
