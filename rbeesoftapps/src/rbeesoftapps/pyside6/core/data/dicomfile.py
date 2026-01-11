@@ -1,6 +1,10 @@
 import os
 import pydicom
 import pydicom.errors
+import numpy as np
+from pydicom.uid import (
+    ExplicitVRLittleEndian, ImplicitVRLittleEndian, ExplicitVRBigEndian
+)
 from rbeesoftapps.pyside6.core.data.file import File
 
 
@@ -17,6 +21,7 @@ class DicomFile(File):
         self._modality = None
         self._series_description = None
         self._manufacturer = None
+        self._pixel_data = None
 
     def load(self) -> bool:
         self._data = None
@@ -24,6 +29,8 @@ class DicomFile(File):
             return False
         try:
             self._data = pydicom.dcmread(self.path())
+            if self.is_jpeg2000_compressed(self._data):
+                self._data.decompress()
             if 'SeriesInstanceUID' in self._data:
                 self._series_instance_uid = self._data.SeriesInstanceUID
             if 'InstanceNumber' in self._data:
@@ -42,6 +49,8 @@ class DicomFile(File):
                 self._series_description = self._data.SeriesDescription
             if 'Manufacturer' in self._data:
                 self._manufacturer = self._data.Manufacturer
+            if 'PixelData' in self._data:
+                self._pixel_data = self._data.pixel_array
             return True
         except pydicom.errors.InvalidDicomError:
             return False
@@ -75,3 +84,8 @@ class DicomFile(File):
     
     def manufacturer(self) -> str:
         return self._manufacturer
+    
+    def is_jpeg2000_compressed(self, data):
+        if hasattr(data.file_meta, 'TransferSyntaxUID'):
+            return data.file_meta.TransferSyntaxUID not in [ExplicitVRLittleEndian, ImplicitVRLittleEndian, ExplicitVRBigEndian]
+        return False
