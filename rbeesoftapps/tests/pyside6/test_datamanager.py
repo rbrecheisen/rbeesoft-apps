@@ -18,6 +18,7 @@ def test_datamanager():
     assert dicom_file.id()
     assert dicom_file.name() == 'dicomfile.dcm'
     assert dicom_file.path() == os.path.abspath('tests/data/dicomfile.dcm')
+    # Trying to DICOM when it's a text file
     dicom_file = manager.load_dicom_file(os.path.abspath('tests/data/file.txt'))
     assert dicom_file.id() is None
     try:

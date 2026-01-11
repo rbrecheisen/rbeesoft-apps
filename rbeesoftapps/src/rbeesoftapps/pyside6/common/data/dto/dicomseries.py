@@ -29,8 +29,7 @@ class DicomSeries:
             dicom_file = DicomFile(file)
             if dicom_file.id():
                 suid = dicom_file.object().SeriesInstanceUID
-                if series_instance_uid is None:
-                    series_instance_uid = suid
+                if series_instance_uid is None: series_instance_uid = suid
                 if not series_instance_uid == suid:
                     raise ValueError(f'Mismatching series instance UID!')
                 dicom_files.append(dicom_file)
