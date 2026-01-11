@@ -1,9 +1,8 @@
 import os
-from typing import Dict
 from rbeesoftapps.pyside6.core.data.dicomseries import DicomSeries
 
 
-class DicomDirectory:
+class DicomSeriesList:
     def __init__(self, path: str) -> None:
         self._path = path
 
@@ -15,3 +14,4 @@ class DicomDirectory:
             return False
         for root, dirs, files in os.walk(self.path()):
             pass
+        return True
