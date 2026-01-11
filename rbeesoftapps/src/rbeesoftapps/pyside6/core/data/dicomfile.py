@@ -27,33 +27,32 @@ class DicomFile(File):
         self._data = None
         if not os.path.isfile(self.path()):
             return False
-        try:
-            self._data = pydicom.dcmread(self.path())
-            if self.is_jpeg2000_compressed(self._data):
-                self._data.decompress()
-            if 'SeriesInstanceUID' in self._data:
-                self._series_instance_uid = self._data.SeriesInstanceUID
-            if 'InstanceNumber' in self._data:
-                self._instance_number = self._data.InstanceNumber
-            if 'PatientID' in self._data:
-                self._patient_id = self._data.PatientID
-            if 'Rows' in self._data:
-                self._rows = self._data.Rows
-            if 'Columns' in self._data:
-                self._columns = self._data.Columns
-            if 'SliceThickness' in self._data:
-                self._slice_thickness = self._data.SliceThickness
-            if 'Modality' in self._data:
-                self._modality = self._data.Modality
-            if 'SeriesDescription' in self._data:
-                self._series_description = self._data.SeriesDescription
-            if 'Manufacturer' in self._data:
-                self._manufacturer = self._data.Manufacturer
-            if 'PixelData' in self._data:
-                self._pixel_data = self._data.pixel_array
-            return True
-        except pydicom.errors.InvalidDicomError:
+        if not self.is_dicom(self.path()):
             return False
+        self._data = pydicom.dcmread(self.path())
+        if self.is_jpeg2000_compressed(self._data):
+            self._data.decompress()
+        if 'SeriesInstanceUID' in self._data:
+            self._series_instance_uid = self._data.SeriesInstanceUID
+        if 'InstanceNumber' in self._data:
+            self._instance_number = self._data.InstanceNumber
+        if 'PatientID' in self._data:
+            self._patient_id = self._data.PatientID
+        if 'Rows' in self._data:
+            self._rows = self._data.Rows
+        if 'Columns' in self._data:
+            self._columns = self._data.Columns
+        if 'SliceThickness' in self._data:
+            self._slice_thickness = self._data.SliceThickness
+        if 'Modality' in self._data:
+            self._modality = self._data.Modality
+        if 'SeriesDescription' in self._data:
+            self._series_description = self._data.SeriesDescription
+        if 'Manufacturer' in self._data:
+            self._manufacturer = self._data.Manufacturer
+        if 'PixelData' in self._data:
+            self._pixel_data = self._data.pixel_array
+        return True
         
     def data(self) -> pydicom.FileDataset:
         return self._data
@@ -85,7 +84,16 @@ class DicomFile(File):
     def manufacturer(self) -> str:
         return self._manufacturer
     
-    def is_jpeg2000_compressed(self, data):
+    @staticmethod
+    def is_dicom(path) -> bool:
+        try:
+            pydicom.dcmread(path, stop_before_pixels=True)
+            return True
+        except pydicom.errors.InvalidDicomError:
+            return False
+    
+    @staticmethod
+    def is_jpeg2000_compressed(data):
         if hasattr(data.file_meta, 'TransferSyntaxUID'):
             return data.file_meta.TransferSyntaxUID not in [ExplicitVRLittleEndian, ImplicitVRLittleEndian, ExplicitVRBigEndian]
         return False

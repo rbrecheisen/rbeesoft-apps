@@ -7,7 +7,7 @@ from rbeesoftapps.pyside6.core.data.dicomfile import DicomFile
 
 
 class DicomSeries(FileSet):
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str=None) -> None:
         super(DicomSeries, self).__init__(path)
         self._series_instance_uid = None
         self._patient_id = None
@@ -20,11 +20,13 @@ class DicomSeries(FileSet):
         self._manufacturer = None
 
     def load(self) -> bool:
+        if not self.path():
+            raise ValueError('Path is not specified')
         if not os.path.isdir(self.path()):
             return False
         for f in os.listdir(self.path()):
             f_path = os.path.join(self.path(), f)
-            if f.startswith('.') or not os.path.isfile(f_path):
+            if f.startswith('._') or not os.path.isfile(f_path):
                 continue
             file = DicomFile(f_path)
             if not file.load():
@@ -64,3 +66,6 @@ class DicomSeries(FileSet):
             self.files().append(file)
         self._nr_slices = len(self.files())
         return self._nr_slices > 0
+    
+    def add_file(self, dicom_file) -> None:
+        self.files().append(dicom_file)
