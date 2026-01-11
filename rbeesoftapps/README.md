@@ -2,8 +2,7 @@
 Python package for building PySide6 and Django apps
 
 ## Todo
-- Implement DataManager tests using pytest
-- Deploy to PyPI
+- Test DicomSeriesList
 
 [x] Implement page mechanism
 [x] Move Settings.py to UiSettings.py and extend from QSettings
