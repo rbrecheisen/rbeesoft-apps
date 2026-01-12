@@ -7,7 +7,6 @@ from pydicom.uid import (
 )
 from rbeesoftapps.pyside6.core.data.file import File
 
-
 class DicomFile(File):
     def __init__(self, path: str) -> None:
         super(DicomFile, self).__init__(path)

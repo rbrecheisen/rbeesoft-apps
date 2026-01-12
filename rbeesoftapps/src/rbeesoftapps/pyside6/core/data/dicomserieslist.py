@@ -38,4 +38,4 @@ class DicomSeriesList:
     
     def print(self):
         for series in self._dicom_series:
-            print(series)
+            series.print_info()

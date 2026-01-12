@@ -12,6 +12,10 @@ dependencies = [
     "sqlalchemy==2.0.45",
     "pydicom==3.0.1",
     "numpy==2.4.1",
+    "gdcm",
+    "pylibjpeg>=2.0",
+    "pylibjpeg-openjpeg>=2.0",
+    "pillow>=10.0",
 ]
 
 [tool.poetry]
